@@ -79,3 +79,29 @@ Level 0: Physical controls (no code, just hands)
 ```
 
 Each level is thinner. Each level fails less. Each level IS still a MUD.
+
+## ESP32 / Arduino Support
+
+### ESP-IDF
+Copy `src/lcar.h` and `src/lcar_esp32_compat.h` into your ESP-IDF project.
+The compatibility layer handles UART init, ADC reads, and FreeRTOS timers.
+
+### Arduino IDE
+1. Copy `src/lcar.h` and `src/lcar_esp32_compat.h` to your sketch
+2. Open `examples/arduino/flux_lcar_bot/` in Arduino IDE
+3. Select your ESP32 board
+4. Upload — the MUD interpreter runs on real hardware
+
+### Wiring (example)
+```
+GPIO36 (ADC1_CH0) → Compass sensor
+GPIO39 (ADC1_CH3) → Speed sensor  
+GPIO34 (ADC1_CH6) → Battery voltage
+GPIO35 (ADC1_CH7) → Temperature sensor
+UART0             → Serial monitor / command interface
+```
+
+### What Happens
+The Arduino boots, creates 3 rooms (Harbor, Nav, Engine), wires 4 gauges to real ADC pins, and starts combat ticks at 1-second intervals. Open Serial Monitor at 115200 baud and type commands: LOOK, GO nav, STATUS, TICK.
+
+Real sensor data flows through gauges. Alert thresholds trigger automatically. The MUD IS the robot's interface.
